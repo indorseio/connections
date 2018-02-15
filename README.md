@@ -17,10 +17,13 @@ For testing the code we recommend the use of truffle for which basic configurati
 ```npm install```
 
 3. EITHER run the test suite using the truffle console:
+
 ```truffle develop```
+
 ```truffle(develop)>test```
 
 4. OR run truffle test suite directly by starting 'ganache' tool and then:
+
 ```truffle test```
 
 
