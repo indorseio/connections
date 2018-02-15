@@ -1,0 +1,7 @@
+# Directories to ignore
+build/
+node_modules/
+
+# Files to ignore
+package.json
+.eslintrc.js
