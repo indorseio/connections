@@ -1,5 +1,13 @@
 pragma solidity ^0.4.18;
 
+/*
+ * version 0.2.0
+ * Copyright (c) 2018 Indorse Pte. Ltd.
+ * The MIT License (MIT)
+ *
+ * This connections contract has been designed and impletmented
+ * by Indorse Pte. Ltd. See further contract information below.
+ */
 
 contract IConnections {
     // Forward = the connection is from the Connection creator to the specified recipient
