@@ -1,7 +1,5 @@
 # Indorse Connections Feature #
 
-Public repository for the Connections feature for Indorse.
-
 This is the code for the smart contract to be used for the Indorse connections feature. 
 
 The contract code is in './contracts' and the testing suite exists in './test'.
@@ -18,12 +16,13 @@ For testing the code we recommend the use of truffle for which basic configurati
 
 ```npm install```
 
-3. EITHER:
+3. EITHER run the test suite using the truffle console:
+```truffle develop```
+```truffle(develop)>test```
 
-    a.  run the test suite using the truffle console:
+4. OR run truffle test suite directly by starting 'ganache' tool and then:
+```truffle test```
 
 
 
-    ```truffle develop```
-    ```truffle(develop)>test```
 
