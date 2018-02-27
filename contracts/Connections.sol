@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity 0.4.19;
 
 /*
  * version 0.2.0
@@ -26,6 +26,16 @@ contract IConnections {
     function isUser(address _entity) view public returns (bool isUserEntity);
     function getEntity(address _entity) view external returns (bool active, address transferOwnerTo, bytes32 data, address owner);
     function getConnection(address _entity, address _connectionTo, bytes32 _connectionType) view external returns (bool entityActive, bool connectionEntityActive, bool connectionActive, bytes32 data, Direction direction, uint expiration);
+
+    // ################## Events ################## //
+    event entityAdded(address indexed entity, address indexed owner);
+    event entityModified(address indexed entity, address indexed owner, bool indexed active, bytes32 data);
+    event entityOwnerChangeRequested(address indexed entity, address indexed oldOwner, address newOwner);
+    event entityOwnerChanged(address indexed entity, address indexed oldOwner, address newOwner);
+    event connectionAdded(address indexed entity, address indexed connectionTo, bytes32 connectionType, Direction direction);
+    event connectionModified(address indexed entity, address indexed connectionTo, bytes32 indexed connectionType, Direction direction, bool active, uint expiration);
+    event connectionRemoved(address indexed entity, address indexed connectionTo, bytes32 indexed connectionType);
+    event entityResolved(address indexed entityRequested, address indexed entityResolved);    
 }
 
 
@@ -71,18 +81,6 @@ contract Connections is IConnections {
     mapping (address => Entity) public entities;
     mapping (address => address) public entityOfUser;
     uint256 public virtualEntitiesCreated = 0;
-
-
-    // ################## Events ################## //
-    event entityAdded(address indexed entity, address indexed owner);
-    event entityModified(address indexed entity, address indexed owner, bool indexed active, bytes32 data);
-    event entityOwnerChangeRequested(address indexed entity, address indexed oldOwner, address newOwner);
-    event entityOwnerChanged(address indexed entity, address indexed oldOwner, address newOwner);
-    event connectionAdded(address indexed entity, address indexed connectionTo, bytes32 connectionType, Direction direction);
-    event connectionModified(address indexed entity, address indexed connectionTo, bytes32 indexed connectionType, Direction direction, bool active, uint expiration);
-    event connectionRemoved(address indexed entity, address indexed connectionTo, bytes32 indexed connectionType);
-    event entityResolved(address indexed entityRequested, address indexed entityResolved);
-
 
     // ################## Constructor and Fallback function ################## //
     /**
@@ -355,8 +353,8 @@ contract Connections is IConnections {
      * Returns a new unique deterministic address that has not been used before
      */
     function createVirtualAddress() internal returns (address virtualAddress) {
-        virtualAddress = address(keccak256(virtualEntitiesCreated + block.number));
-        virtualEntitiesCreated++;
+        virtualAddress = address(keccak256(safeAdd(virtualEntitiesCreated,block.number)));
+        virtualEntitiesCreated = safeAdd(virtualEntitiesCreated,1);
     }
 
     /**
@@ -388,5 +386,11 @@ contract Connections is IConnections {
         entityAddress = resolveEntityAddress(_entityAddress);
         emitEntityResolution(_entityAddress, entityAddress);
         require(entities[entityAddress].owner == msg.sender);
+    }
+
+    function safeAdd(uint256 x, uint256 y) internal pure returns(uint256) {
+      uint256 z = x + y;
+      assert((z >= x) && (z >= y));
+      return z;
     }    
 }
